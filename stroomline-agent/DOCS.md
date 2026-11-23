@@ -18,5 +18,21 @@ Connects this Home Assistant to [Stroomline](https://stroomline.pixelhub.nl), th
 - If the token is revoked in Stroomline, the agent disconnects, logs it and
   shows a new pairing code.
 
+## History from InfluxDB (optional)
+
+Stroomline can compute earnings for the time before the agent was installed
+from the InfluxDB app's history. Create a read-only user in InfluxDB, e.g. in
+the InfluxDB app's web UI (InfluxDB Admin → Users) or its CLI:
+
+```
+CREATE USER stroomline_ro WITH PASSWORD '…'
+GRANT READ ON homeassistant TO stroomline_ro
+```
+
+Then set **influxdb_password** (and **influxdb_username**, **influxdb_database**
+or **influxdb_url** if yours differ) in this app's configuration, restart it, and
+press **Backfill history** under Household → Agents in Stroomline. The agent
+only reads from InfluxDB; it doesn't change anything.
+
 Safety limits for later write commands are built into the agent itself:
 at most 800 W per Zendure unit and 6–16 A charge current.
