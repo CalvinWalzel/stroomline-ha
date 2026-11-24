@@ -65,7 +65,10 @@ battery back to the plan, or to the Manager (`smart`) when there is none. The
 agent keeps the end time itself, so this also happens when Stroomline is
 unreachable. A running charge survives an app restart or update (it's saved
 in the app's data folder); if its end passed while the app was down, the
-Manager goes back to `smart`.
+Manager goes back to `smart`. If something else changes the Manager's mode
+or manual power while the agent controls it (an automation, the Zendure app,
+a reload of the integration), the agent sets it back within about a minute
+and logs a warning.
 
 While battery or EV control is on, the agent also installs the watchdog
 automation **Stroomline watchdog** in Home Assistant (and keeps it up to date;

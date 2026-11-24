@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.3
+
+- In manual mode (Charge now or manual plan slots) the agent also watches
+  `number.zendure_manager_manual_power`. When it no longer matches what the
+  agent wrote, for example because an automation or the Zendure app set it to
+  0 W, the agent writes it again (at most once a minute) and logs a warning.
+  Before, it only corrected a changed mode, so a charge could stop halfway
+  while the Manager still showed `manual`.
+
 ## 0.6.2
 
 - At full power (800 W × **battery_units**) the agent writes 100 W more to
