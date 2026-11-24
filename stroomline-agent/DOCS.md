@@ -54,11 +54,22 @@ Stroomline, the agent carries out the plan through the zendure_ha Manager:
   Manager to `smart_discharging` (never charges) and refuses commands until
   you restart the app.
 
+With **battery_control** on, the **Charge now** button on Stroomline's Plan
+page works too, also while the planner is still in shadow mode: the agent
+charges the battery from the grid (manual, negative power, at most 800 W per
+unit) for the chosen time, or until the units' mean state of charge reaches
+the chosen level, whichever comes first (at most 6 hours). Then it hands the
+battery back to the plan, or to the Manager (`smart`) when there is none. The
+agent keeps the end time itself, so this also happens when Stroomline is
+unreachable; if the app restarts, the charge stops and the Manager goes back
+to `smart` right away.
+
 While battery or EV control is on, the agent also installs the watchdog
 automation **Stroomline watchdog** in Home Assistant (and keeps it up to date;
 it removes it again when both are off). The automation runs in Home Assistant
 on its own: if the heartbeat is older than 10 minutes it puts the Manager back
-on `smart`, restores the wallbox fallback (three phases, charging on, cars at
+on `smart` (and it does the same when the Manager is still on `manual` more
+than 5 minutes after a charge or the plan's manual slots should have ended), restores the wallbox fallback (three phases, charging on, cars at
 16 A) and sends a push notification to every `mobile_app` phone, or to the
 notify actions in **watchdog_notify** (comma-separated, such as
 `notify.mobile_app_my_phone`). Stroomline's Plan page shows whether it's

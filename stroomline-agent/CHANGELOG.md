@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0
+
+- **Charge now**: Stroomline's Plan page can charge the battery from the grid
+  for a while, optionally until a state of charge (`until_soc`, the units'
+  mean). The agent ends it on its own when the time is up or the target is
+  reached, hands the battery back to the plan or the Zendure Manager (smart),
+  and tells Stroomline. Overrides now last up to 6 hours, and a new plan no
+  longer cancels a running one.
+- The heartbeat sensor carries `manual_until`. The watchdog automation also
+  puts the Manager back on smart when it's still on manual more than 5 minutes
+  after that, even while the agent is running (e.g. a write that didn't land).
+  The agent updates the automation itself.
+
 ## 0.5.0
 
 - The agent installs the watchdog automation itself (**Stroomline watchdog**,
