@@ -1,5 +1,5 @@
 name: Stroomline Agent
-version: "0.2.0"
+version: "0.3.0"
 slug: stroomline_agent
 description: Connects Home Assistant to Stroomline, the home energy planner.
 url: https://github.com/CalvinWalzel/stroomline-ha
@@ -8,7 +8,8 @@ arch:
 init: false
 startup: application
 boot: auto
-# Read-only use of the Home Assistant WebSocket API (milestones 1–2).
+# Home Assistant API: reads states; writes only with battery_control on
+# (Zendure Manager mode/power and a heartbeat sensor).
 homeassistant_api: true
 image: ghcr.io/calvinwalzel/stroomline-agent
 options:
@@ -19,6 +20,8 @@ options:
   influxdb_database: homeassistant
   influxdb_username: stroomline_ro
   influxdb_password: ""
+  battery_control: false
+  battery_units: 3
 schema:
   server_url: url
   agent_name: str
@@ -27,3 +30,5 @@ schema:
   influxdb_database: str
   influxdb_username: str
   influxdb_password: password?
+  battery_control: bool
+  battery_units: int(1,10)

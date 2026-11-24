@@ -1,0 +1,52 @@
+# Stroomline watchdog (Home Assistant automation).
+#
+# While battery control is on, the Stroomline agent keeps
+# sensor.stroomline_agent_heartbeat at the time of its last heartbeat. If that
+# is more than 10 minutes old (the agent stopped or hangs), this puts the
+# zendure_ha Manager back on smart and sends a push notification. After a Home
+# Assistant restart it checks again after 10 minutes, since the heartbeat
+# sensor only reappears once the agent sends its next beat.
+#
+# smart_discharging is left alone: it never charges, and it's what the
+# zendure_ha patch warning automation and the agent's own lockout choose.
+#
+# Install: Settings → Automations & scenes → Create automation → ⋮ → Edit in
+# YAML, paste this, save. Change the notify action if your phone differs.
+alias: Stroomline watchdog
+description: >-
+  Puts the Zendure Manager back on smart when the Stroomline agent stops
+  sending heartbeats while it controls the battery.
+mode: parallel
+max: 5
+triggers:
+  - trigger: time_pattern
+    minutes: /1
+    id: tick
+  - trigger: homeassistant
+    event: start
+    id: start
+conditions: []
+actions:
+  - if:
+      - condition: trigger
+        id: start
+    then:
+      - delay: "00:10:00"
+  - variables:
+      mode_now: "{{ states('select.zendure_manager_operation') }}"
+      stale: >-
+        {%- set at = as_datetime(states('sensor.stroomline_agent_heartbeat'), none) -%}
+        {{- (trigger.id == 'start') if at is none else (now() - at).total_seconds() > 600 -}}
+  - condition: template
+    value_template: "{{ stale and mode_now not in ['smart', 'smart_discharging'] }}"
+  - action: select.select_option
+    target:
+      entity_id: select.zendure_manager_operation
+    data:
+      option: smart
+  - action: notify.mobile_app_iphone
+    data:
+      title: Stroomline watchdog
+      message: >-
+        No heartbeat from the Stroomline agent for 10 minutes. The battery is
+        back on the Zendure Manager (smart, was {{ mode_now }}).

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0
+
+- Battery control (off by default): with the new **battery_control** option
+  on, the agent carries out Stroomline's battery plan through the zendure_ha
+  Manager (`select.zendure_manager_operation`, `number.zendure_manager_manual_power`).
+  Only the modes smart, smart_discharging, store_solar and manual are used,
+  manual power is capped at 800 W per unit (**battery_units**, default 3), and
+  without a current plan the Manager goes back to smart.
+- While battery control is on, the agent keeps `sensor.stroomline_agent_heartbeat`
+  up to date for the watchdog automation.
+- Safety lockout: a unit reading over 1000 W twice in a row (the 800 W
+  zendure_ha patch is probably gone) stops control and sets the Manager to
+  smart_discharging until the agent restarts.
+
 ## 0.2.0
 
 - History backfill: on request from Stroomline (Household → Agents → History),
