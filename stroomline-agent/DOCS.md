@@ -45,7 +45,9 @@ Stroomline, the agent carries out the plan through the zendure_ha Manager:
 - It only selects the Manager modes `smart`, `smart_discharging`,
   `store_solar` and `manual`, and sets `number.zendure_manager_manual_power`
   for manual. Manual power is capped at 800 W per unit × **battery_units**
-  inside the agent, on top of the zendure_ha patch.
+  inside the agent, on top of the zendure_ha patch. At that full cap it writes
+  100 W more, since the Manager otherwise leaves one unit idle; the per-unit
+  800 W limit keeps each unit at 800 W.
 - When the plan ends, or there is none, it puts the Manager back on `smart`.
 - It keeps `sensor.stroomline_agent_heartbeat` at the time of its last
   heartbeat (also while only EV control is on), so a watchdog automation can

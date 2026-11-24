@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.2
+
+- At full power (800 W × **battery_units**) the agent writes 100 W more to
+  `number.zendure_manager_manual_power`, because the Zendure Manager leaves
+  one unit idle when the setpoint is exactly units × 800 W. Each unit stays
+  at 800 W through the Manager's per-unit limit, and the agent's 1000 W
+  lockout still applies. Lower setpoints are written as they are.
+
 ## 0.6.1
 
 - A running **Charge now** survives an app restart or update: the agent saves
