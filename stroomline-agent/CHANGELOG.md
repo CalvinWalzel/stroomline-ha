@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0
+
+- The agent installs the watchdog automation itself (**Stroomline watchdog**,
+  id `stroomline_watchdog`) while battery or EV control is on, keeps it up to
+  date with the entities from the app options, and removes it when both are
+  off. No more pasting YAML; if you pasted it by hand before, delete that copy.
+- Notifications go to every `mobile_app` phone Home Assistant knows, or to the
+  notify actions in the new **watchdog_notify** option (comma-separated).
+- Set the new **watchdog** option off to manage the automation yourself.
+- Stroomline shows on the Plan page whether the watchdog is installed.
+
 ## 0.4.0
 
 - EV control (off by default): with the new **ev_control** option on, the agent
