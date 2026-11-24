@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0
+
+- EV control (off by default): with the new **ev_control** option on, the agent
+  carries out the wallbox part of Stroomline's EV plan on the Zaptec through
+  Home Assistant: charging on/off (**ev_charging_entity**) and one or three
+  phases (**ev_phase_entity**). Phase changes at most every 15 minutes (Zaptec
+  fair use); nothing is written while Home Assistant already shows the value.
+- Without a current EV plan the wallbox falls back to charging on, three
+  phases, and the cars' charge current (**ev_car_amps_entities**) to 16 A.
+- The heartbeat sensor also runs while only EV control is on, and carries the
+  wallbox state; the watchdog automation restores the EV fallback too.
+
 ## 0.3.0
 
 - Battery control (off by default): with the new **battery_control** option

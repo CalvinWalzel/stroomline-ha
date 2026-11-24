@@ -14,7 +14,7 @@ Connects this Home Assistant to [Stroomline](https://stroomline.pixelhub.nl), th
 
 - Reads the entities chosen under Household → Agents (entity mapping) and sends
   1-minute aggregates. Cars are reported as home/away only, never coordinates.
-- Answers `ping` commands. Without battery control (below) it doesn't change anything in Home Assistant.
+- Answers `ping` commands. Without battery or EV control (below) it doesn't change anything in Home Assistant.
 - If the token is revoked in Stroomline, the agent disconnects, logs it and
   shows a new pairing code.
 
@@ -48,15 +48,40 @@ Stroomline, the agent carries out the plan through the zendure_ha Manager:
   inside the agent, on top of the zendure_ha patch.
 - When the plan ends, or there is none, it puts the Manager back on `smart`.
 - It keeps `sensor.stroomline_agent_heartbeat` at the time of its last
-  heartbeat, so a watchdog automation can put the Manager back on `smart` if
-  the agent stops.
+  heartbeat (also while only EV control is on), so a watchdog automation can
+  put the Manager back on `smart` if the agent stops.
 - If a unit reports more than 1000 W twice in a row, it stops control, sets the
   Manager to `smart_discharging` (never charges) and refuses commands until
   you restart the app.
 
 Before going live, install the watchdog automation from
 [stroomline-watchdog.yaml](https://github.com/CalvinWalzel/stroomline-ha/blob/main/stroomline-watchdog.yaml):
-if the heartbeat is older than 10 minutes it puts the Manager back on `smart`
-and sends a push notification.
+if the heartbeat is older than 10 minutes it puts the Manager back on `smart`,
+restores the wallbox fallback (three phases, charging on, cars at 16 A) and
+sends a push notification.
 
-Car charge current limits (6–16 A) are built in for later.
+## EV control (optional, off by default)
+
+With **ev_control** off (the default) the agent doesn't touch the wallbox or
+the cars. Stroomline plans car charging in shadow mode.
+
+When you switch **ev_control** on and set EV charging to live in Stroomline,
+the agent carries out the wallbox part of the plan on the Zaptec through Home
+Assistant (the car's charge current is set by Stroomline through Tessie):
+
+- Charging on or off with **ev_charging_entity** (default
+  `switch.gpn006745_charging`).
+- One or three phases with **ev_phase_entity** (default
+  `number.westerloane_29_3_to_1_phase_switch_current`: 32 = one phase,
+  0 = three phases).
+- Zaptec allows about one settings change per 15 minutes, so the agent changes
+  the phases at most every 15 minutes and the charging switch at most every
+  5 minutes, and writes nothing while Home Assistant already shows the wanted
+  value.
+- When the plan ends, or there is none, it falls back to charging on, three
+  phases, and sets each car's charge current back to 16 A
+  (**ev_car_amps_entities**, comma-separated; only where Home Assistant shows
+  another value).
+- While EV control is on it keeps the heartbeat sensor up to date too, so the
+  watchdog automation can restore the same fallback if the agent stops.
+

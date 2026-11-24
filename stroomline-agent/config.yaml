@@ -1,5 +1,5 @@
 name: Stroomline Agent
-version: "0.3.0"
+version: "0.4.0"
 slug: stroomline_agent
 description: Connects Home Assistant to Stroomline, the home energy planner.
 url: https://github.com/CalvinWalzel/stroomline-ha
@@ -9,7 +9,8 @@ init: false
 startup: application
 boot: auto
 # Home Assistant API: reads states; writes only with battery_control on
-# (Zendure Manager mode/power and a heartbeat sensor).
+# (Zendure Manager mode/power), ev_control on (Zaptec charging switch and
+# phases, car charge current on fallback) and a heartbeat sensor for either.
 homeassistant_api: true
 image: ghcr.io/calvinwalzel/stroomline-agent
 options:
@@ -22,6 +23,10 @@ options:
   influxdb_password: ""
   battery_control: false
   battery_units: 3
+  ev_control: false
+  ev_charging_entity: switch.gpn006745_charging
+  ev_phase_entity: number.westerloane_29_3_to_1_phase_switch_current
+  ev_car_amps_entities: "number.hobbes_charge_current,number.lucky_charge_current"
 schema:
   server_url: url
   agent_name: str
@@ -32,3 +37,7 @@ schema:
   influxdb_password: password?
   battery_control: bool
   battery_units: int(1,10)
+  ev_control: bool
+  ev_charging_entity: str
+  ev_phase_entity: str
+  ev_car_amps_entities: str
