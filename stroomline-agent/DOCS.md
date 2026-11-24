@@ -61,8 +61,9 @@ unit) for the chosen time, or until the units' mean state of charge reaches
 the chosen level, whichever comes first (at most 6 hours). Then it hands the
 battery back to the plan, or to the Manager (`smart`) when there is none. The
 agent keeps the end time itself, so this also happens when Stroomline is
-unreachable; if the app restarts, the charge stops and the Manager goes back
-to `smart` right away.
+unreachable. A running charge survives an app restart or update (it's saved
+in the app's data folder); if its end passed while the app was down, the
+Manager goes back to `smart`.
 
 While battery or EV control is on, the agent also installs the watchdog
 automation **Stroomline watchdog** in Home Assistant (and keeps it up to date;

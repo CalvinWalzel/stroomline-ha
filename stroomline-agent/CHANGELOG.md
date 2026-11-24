@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+- A running **Charge now** survives an app restart or update: the agent saves
+  it in its data folder and picks it up again with the same end time and
+  target. If it ended while the app was down, the battery goes back to smart.
+
 ## 0.6.0
 
 - **Charge now**: Stroomline's Plan page can charge the battery from the grid
