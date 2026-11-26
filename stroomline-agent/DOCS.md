@@ -54,7 +54,10 @@ Stroomline, the agent carries out the plan through the zendure_ha Manager:
   put the Manager back on `smart` if the agent stops.
 - If a unit reports more than 1000 W twice in a row, it stops control, sets the
   Manager to `smart_discharging` (never charges) and refuses commands until
-  you restart the app.
+  you restart the app. Not when a unit at 12% charge or less charges faster
+  while the agent isn't charging manually: that's the Zendure firmware
+  recharging an empty unit to its minimum at 2400 W, which the Manager can't
+  stop. The agent logs a warning for that instead.
 
 With **battery_control** on, the **Charge now** button on Stroomline's Plan
 page works too, also while the planner is still in shadow mode: the agent

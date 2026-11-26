@@ -1,5 +1,5 @@
 name: Stroomline Agent
-version: "0.6.3"
+version: "0.6.4"
 slug: stroomline_agent
 description: Connects Home Assistant to Stroomline, the home energy planner.
 url: https://github.com/CalvinWalzel/stroomline-ha
