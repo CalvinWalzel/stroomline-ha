@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.4
+
+- No more safety lockout from the Zendure firmware's own low-battery
+  recharge. A unit that sits idle at its minimum charge slowly drifts lower
+  (for example 10% to 5%), and then charges itself from the grid at its full
+  2400 W back up to the minimum, past the Zendure Manager and its 800 W
+  per-unit limit. Before, the agent took that for a missing 800 W limit and
+  stopped battery control until a restart. Now a unit at 12% charge or less
+  may charge faster while the agent isn't charging manually; the agent logs a
+  warning instead. Above 12%, during a Charge now or manual plan slots, or
+  when a unit discharges above 1000 W, the lockout works as before.
+- A lockout reaches Stroomline right away, so the app warns within minutes.
+  Before, it only showed after the agent next reconnected.
+
 ## 0.6.3
 
 - In manual mode (Charge now or manual plan slots) the agent also watches
