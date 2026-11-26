@@ -59,6 +59,19 @@ Stroomline, the agent carries out the plan through the zendure_ha Manager:
   recharging an empty unit to its minimum at 2400 W, which the Manager can't
   stop. The agent logs a warning for that instead.
 
+The agent also guards the main fuse while it charges the battery (mains
+guard). Stroomline's plan already keeps house, car and battery under the
+fuse, but on 15-minute forecasts, so an oven or heater switching on mid-charge
+isn't in it. The agent watches **mains_grid_entity** (W, positive = import;
+default `sensor.grid_power`) and, if you list them in **mains_phase_entities**
+(comma-separated, in A), each phase's current. When any phase passes 95% of
+**mains_fuse_amps** (default 25), or without phase sensors the total passes
+85% of **mains_phases** × **mains_fuse_amps** × 230 V, it pauses a manual
+charge at 0 W, for at least 5 minutes and until the draw with the charge back
+on stays under the limit. The limits come only from these options, never from
+Stroomline. The wallbox needs its own load balancing (Tibber Pulse or the
+Zaptec P1 meter); the agent doesn't throttle the car.
+
 With **battery_control** on, the **Charge now** button on Stroomline's Plan
 page works too, also while the planner is still in shadow mode: the agent
 charges the battery from the grid (manual, negative power, at most 800 W per
