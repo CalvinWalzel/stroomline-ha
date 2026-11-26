@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0
+
+- Mains guard: the agent keeps battery charging from overloading your main
+  fuse, on its own and within about 10 seconds, also when Stroomline is
+  unreachable. When the grid draw passes 85% of all phases together (or, with
+  **mains_phase_entities** set, any phase passes 95% of the fuse), a manual
+  charge (plan slots or Charge now) pauses at 0 W. It resumes after at least
+  5 minutes, once the draw with the charge back on stays under the limit.
+  Set your fuse in **mains_fuse_amps** and **mains_phases** (default 3 × 25 A)
+  and the grid power sensor in **mains_grid_entity** (default
+  `sensor.grid_power`). It can't stop the Zendure firmware's own low-battery
+  recharge. Discharging and solar-only modes aren't affected.
+
 ## 0.6.4
 
 - No more safety lockout from the Zendure firmware's own low-battery

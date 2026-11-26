@@ -1,5 +1,5 @@
 name: Stroomline Agent
-version: "0.6.4"
+version: "0.7.0"
 slug: stroomline_agent
 description: Connects Home Assistant to Stroomline, the home energy planner.
 url: https://github.com/CalvinWalzel/stroomline-ha
@@ -30,6 +30,10 @@ options:
   ev_car_amps_entities: "number.hobbes_charge_current,number.lucky_charge_current"
   watchdog: true
   watchdog_notify: ""
+  mains_fuse_amps: 25
+  mains_phases: 3
+  mains_grid_entity: sensor.grid_power
+  mains_phase_entities: ""
 schema:
   server_url: url
   agent_name: str
@@ -46,3 +50,7 @@ schema:
   ev_car_amps_entities: str
   watchdog: bool
   watchdog_notify: str?
+  mains_fuse_amps: int(6,100)
+  mains_phases: list(1|3)
+  mains_grid_entity: str
+  mains_phase_entities: str?
